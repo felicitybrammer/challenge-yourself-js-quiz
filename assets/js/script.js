@@ -1,4 +1,5 @@
-var startButtonEl = document.querySelector("#start-btn");
+var introEl = document.querySelector("#intro-container");
+// var startButtonEl = document.querySelector("#start-btn");
 var quizContainerEl = document.querySelector("#quiz-container");
 var timerEl = document.querySelector("#countdown");
 var score = 0;
@@ -32,31 +33,33 @@ var questions = [
         correctAnswer: "document.getElementById('demo').innerHTML = 'Hello World!';" //choices[2]
     }
 ];
+var removeAllChildNodes = function(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+};
 
 var startQuiz = function() {
    countDown(); 
-
-   
-   for (var i = 1; i < questions.length + 1; i++) {
+   //clear intro from page
+   var container = document.querySelector('#intro-container')
+   removeAllChildNodes(container);
+   for (var i = 0; i < questions.length; i++) {
        //determine which question to show (collect a question object)
        //var nextQuestion = questions[i];    //Math.floor(Math.random() * questions.length)]; 
-       
        showQuestion(questions[i]);
    } 
    
 }; 
 
-var showQuestion = function(array) {
-    //remove intro from page
+var showQuestion = function() {
     
-    
+       
     //dynamically create element, append to page, 
     //display question value from  question object  array[i].question
     //display choices as buttons array[i].choices
 
-    //collect info about button clicked for answers
-    //check right or wrong answers
-    //display relevant message
+  
 
 };
 
@@ -91,7 +94,25 @@ var endQuiz = function() {};
      }, 1000);  
  };
 
+var displayIntro = function() {
+    //add title, paragraph and button
+    var introTitleEl = document.createElement('h1');
+    var introParaEl = document.createElement('p');
+    var startButtonEl = document.createElement('button');
 
+    introTitleEl.textContent = 'Coding Quiz Challenge';
+    introParaEl.textContent = 'Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will decrease your remaining time by five seconds.';
+    startButtonEl.textContent = 'Start Quiz';
+
+    //set style attributes
+
+    introEl.appendChild(introTitleEl);
+    introEl.appendChild(introParaEl);
+    introEl.appendChild(startButtonEl);
+    
+};
+
+displayIntro();
 
 startButtonEl.addEventListener('click', startQuiz());
 //event listener for answer button calls checkAnswer
