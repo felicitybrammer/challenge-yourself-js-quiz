@@ -1,10 +1,12 @@
 var introEl = document.querySelector("#intro-container");
 var startButtonEl = document.createElement('button');
 var quizContainerEl = document.querySelector("#quiz-container");
+var currentQuestionEl = document.querySelector("#current-question-container");
 var timerEl = document.querySelector("#countdown");
 var answerContainerEl = document.querySelector("#answer-container");
 var score = 0;
 var timeLeft;
+var i;
 var correctMessage = document.createElement('span').textContent = "Correct!";
 var wrongMessage = document.createElement('span').textContent = "Wrong!";
 
@@ -36,6 +38,7 @@ var questions = [
         correctAnswer: "document.getElementById('demo').innerHTML = 'Hello World!';" 
     }
 ];
+
 var removeAllChildNodes = function(parent) {
     while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
@@ -47,10 +50,14 @@ var startQuiz = function() {
    //clear intro from page
    var container = document.querySelector('#intro-container')
    removeAllChildNodes(container);
+
+
+
    for (var i = 0; i < questions.length; i++) {
-       //determine which question to show (collect a question object)
-       //var nextQuestion = questions[i];    //Math.floor(Math.random() * questions.length)]; 
-       showQuestion(i);
+       //questions[i].question = this.question;
+       //questions[i].choices[0] = this.choices[0];
+       //show one object at a time
+       showQuestion();
         
    } 
    
@@ -73,26 +80,26 @@ var showQuestion = function(i) {
     button3El.textContent = questions[i].choices[2];
     button4El.textContent = questions[i].choices[3];
     //append to quizContainerEl
-    quizContainerEl.appendChild(questionEl);
+    currentQuestionEl.appendChild(questionEl);
     answerContainerEl.appendChild(button1El);
     answerContainerEl.appendChild(button2El);
     answerContainerEl.appendChild(button3El);
     answerContainerEl.appendChild(button4El);
-    quizContainerEl.appendChild(answerContainerEl);
-    //display question value from  question object  array[i].question
-    //display choices as buttons array[i].choices 
-
+    currentQuestionEl.appendChild(answerContainerEl);
+    
+    
 };
 
 var checkAnswer = function(event) {
 
-    if (event.target.matches(questions.correctAnswer)) { //if button pressed text matches correct answer text
+    if (event.target.matches(questions[i].correctAnswer)) { //if button pressed text matches correct answer text
         score++;
         answerContainerEl.appendChild(correctMessage);
     }
+    currentQuestionEl.remove();
     //if correct, score++, display message, run showQuestions 
 
-    
+    //answerContainerEl.textContent = "";
     //if no more questions, endQuiz()
     //if incorrect, wrongAnswer()
     //clear page
@@ -110,7 +117,7 @@ var endQuiz = function() {};
 
 
 
- function countDown() { 
+function countDown() { 
      var timeLeft = 75;
 
      var timeInterval = setInterval(function() {
@@ -125,16 +132,16 @@ var endQuiz = function() {};
  };
 
 var displayIntro = function() {
-    //add title, paragraph and button
+    
     var introTitleEl = document.createElement('h1');
     var introParaEl = document.createElement('p');
-    //var startButtonEl = document.createElement('button');
+    
 
     introTitleEl.textContent = 'Coding Quiz Challenge';
     introParaEl.textContent = 'Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will decrease your remaining time by five seconds.';
     startButtonEl.textContent = 'Start Quiz';
 
-    //set style attributes
+    //set style class 
 
     introEl.appendChild(introTitleEl);
     introEl.appendChild(introParaEl);
@@ -145,5 +152,4 @@ var displayIntro = function() {
 displayIntro();
 
 startButtonEl.addEventListener('click', startQuiz);
-//event listener for answer button group calls checkAnswer
 answerContainerEl.addEventListener('click', checkAnswer);
