@@ -1,5 +1,8 @@
 var introEl = document.querySelector("#intro-container");
 var startButtonEl = document.createElement('button');
+startButtonEl.id = 'btn';
+
+
 var quizContainerEl = document.querySelector("#quiz-container");
 var currentQuestionEl = document.querySelector("#current-question-container");
 var timerEl = document.getElementById("countdown");
@@ -8,10 +11,23 @@ var score = 0;
 var timeLeft;
 var i = 0;
 var button1El = document.createElement('button');
+//Button1El.id = 'btn';
 var button2El = document.createElement('button');
+//Button2El.id = 'btn';
 var button3El = document.createElement('button');
+//Button3El.id = 'btn';
 var button4El = document.createElement('button');
+//Button4El.id = 'btn';
 var questionEl = document.createElement('h2');
+
+var resultsEl = document.getElementById("result-container");
+var showScore = document.createElement('h2');
+var saveScorep = document.createElement('p');
+var saveScoretext = document.createElement('input');
+var saveBtn = document.createElement('button');
+saveBtn.id = 'btn';
+
+var highScoresContainerEl = document.getElementById('highScores-container');
 
 var questions = [
     {
@@ -84,9 +100,9 @@ var showQuestion = function() {
 
 var checkAnswer = function(event) {
     // i++; 
-     if (i >= questions.length-1) {
+     if (i >= questions.length-1 || timeLeft === 0) {
         
-          endQuiz();
+        endQuiz();
       } else {
     
         
@@ -95,16 +111,29 @@ var checkAnswer = function(event) {
        if (event.target.textContent === questions[i].correctAnswer) { //if button pressed text matches correct answer text
             score++;
             i++;
-            showQuestion();
+            //showQuestion();
             console.log(i);
             console.log(score);
+            var correctEl = document.createElement("h2");
+            correctEl.className = "answer-status";
+            correctEl.textContent = "Correct!";
+            quizContainerEl.appendChild(correctEl);
         } else {
             i++;
             timeLeft -= 5;
-            showQuestion();
+            
             console.log('wrong answer');
+            var incorrectEl = document.createElement("h2");
+            incorrectEl.className = "answer-status";
+            incorrectEl.textContent = "Wrong!";
+            quizContainerEl.appendChild(incorrectEl);
+
+            //showQuestion();
         }
+        
+        showQuestion();
     }
+
 }
 
 
@@ -113,14 +142,78 @@ var checkAnswer = function(event) {
 var endQuiz = function() {
   
    removeAllChildNodes(quizContainerEl);
-   //removeAllChildNodes(countdown);
    timerEl.style.display = "none"; 
+
+   showScore.textContent = "Your score is " + score + " out of 5";
+   saveScorep.textContent = "Enter your initials:";
+   
+   saveBtn.textContent = "Save Score";
+   resultsEl.appendChild(showScore);
+   resultsEl.appendChild(saveScorep);
+   resultsEl.appendChild(saveScoretext);
+   resultsEl.appendChild(saveBtn);
+   
+};
+
+var saveScore = function(event) {
+    removeAllChildNodes(resultsEl);
+    //remove timer?
+    clearInterval(timeLeft);
+
+    var finalScore = {
+        score: score,
+        name: saveScoretext.value
+    }
+    console.log(saveScoretext.value);
+    localStorage.setItem("score", JSON.stringify(finalScore));
+
+    showScores();
+}; 
+
+var scoreTitleEl = document.createElement("h1");
+var scoreEl = document.createElement("h3");
+var goBackEl = document.createElement("button");
+var clearScoresEl = document.createElement("button");
+
+var showScores = function() {
+    
+    var highScore = localStorage.getItem('score');
+    highScore = JSON.parse(highScore);
+    
+    
+    scoreTitleEl.textContent = "High Score List";
+    highScoresContainerEl.appendChild(scoreTitleEl);
+    
+    scoreEl.textContent = highScore.name + " : " + highScore.score;
+    highScoresContainerEl.appendChild(scoreEl);
+   
+    goBackEl.setAttribute("type", "button");
+    goBackEl.textContent = "Go Back";
+    highScoresContainerEl.appendChild(goBackEl);
+
+    
+    clearScoresEl.setAttribute("type", "button");
+    clearScoresEl.textContent = "Clear Score";
+    highScoresContainerEl.appendChild(clearScoresEl);
+
+    
+
+}
+goBackEl.addEventListener("click", goBack);
+clearScoresEl.addEventListener("click", clearScore);
+var goBack = function() {
+    location.reload();
+};
+
+var clearScore = function() {
+    localStorage.removeItem("score");
+    highScoresContainerEl.removeChild(scoreEl);
 };
 
 
 
 function countDown() { 
-    timeLeft = 75;
+    timeLeft = 60;
 
      var timeInterval = setInterval(function() {
         if (timeLeft > 0) {
@@ -157,3 +250,6 @@ button1El.addEventListener('click', checkAnswer);
 button2El.addEventListener('click', checkAnswer);
 button3El.addEventListener('click', checkAnswer);
 button4El.addEventListener('click', checkAnswer);
+
+//add event listener for save button, call highscores
+saveBtn.addEventListener('click', saveScore);
