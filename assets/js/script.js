@@ -26,6 +26,12 @@ var saveScorep = document.createElement('p');
 var saveScoretext = document.createElement('input');
 var saveBtn = document.createElement('button');
 saveBtn.id = 'btn';
+button1El.id = 'wide-btn';
+button2El.id = 'wide-btn';
+button3El.id = 'wide-btn';
+button4El.id = 'wide-btn';
+
+
 
 var highScoresContainerEl = document.getElementById('highScores-container');
 
@@ -110,7 +116,7 @@ var checkAnswer = function(event) {
         // console.log(questions[i].correctAnswer);
        if (event.target.textContent === questions[i].correctAnswer) { //if button pressed text matches correct answer text
             score++;
-            i++;
+            
             //showQuestion();
             console.log(i);
             console.log(score);
@@ -118,8 +124,9 @@ var checkAnswer = function(event) {
             correctEl.className = "answer-status";
             correctEl.textContent = "Correct!";
             quizContainerEl.appendChild(correctEl);
-        } else {
             i++;
+        } else {
+            
             timeLeft -= 5;
             
             console.log('wrong answer');
@@ -127,7 +134,7 @@ var checkAnswer = function(event) {
             incorrectEl.className = "answer-status";
             incorrectEl.textContent = "Wrong!";
             quizContainerEl.appendChild(incorrectEl);
-
+            i++;
             //showQuestion();
         }
         
@@ -172,8 +179,8 @@ var saveScore = function(event) {
 
 var scoreTitleEl = document.createElement("h1");
 var scoreEl = document.createElement("h3");
-var goBackEl = document.createElement("button");
-var clearScoresEl = document.createElement("button");
+var goBackBtn = document.createElement("button");
+var clearScoresBtn = document.createElement("button");
 
 var showScores = function() {
     
@@ -181,31 +188,36 @@ var showScores = function() {
     highScore = JSON.parse(highScore);
     
     
-    scoreTitleEl.textContent = "High Score List";
+    scoreTitleEl.textContent = "High Scores";
     highScoresContainerEl.appendChild(scoreTitleEl);
     
     scoreEl.textContent = highScore.name + " : " + highScore.score;
     highScoresContainerEl.appendChild(scoreEl);
    
-    goBackEl.setAttribute("type", "button");
-    goBackEl.textContent = "Go Back";
-    highScoresContainerEl.appendChild(goBackEl);
+    goBackBtn.setAttribute("type", "button");
+    goBackBtn.textContent = "Go Back";
+    goBackBtn.id = 'btn';
+    highScoresContainerEl.appendChild(goBackBtn);
 
     
-    clearScoresEl.setAttribute("type", "button");
-    clearScoresEl.textContent = "Clear Score";
-    highScoresContainerEl.appendChild(clearScoresEl);
+    clearScoresBtn.setAttribute("type", "button");
+    clearScoresBtn.id = 'btn';
+    clearScoresBtn.textContent = "Clear Score";
+    highScoresContainerEl.appendChild(clearScoresBtn);
 
     
 
 }
-goBackEl.addEventListener("click", goBack);
-clearScoresEl.addEventListener("click", clearScore);
+
+
+
 var goBack = function() {
+    console.log('go back clicked');
     location.reload();
 };
 
 var clearScore = function() {
+    console.log('clear score clicked');
     localStorage.removeItem("score");
     highScoresContainerEl.removeChild(scoreEl);
 };
@@ -217,7 +229,7 @@ function countDown() {
 
      var timeInterval = setInterval(function() {
         if (timeLeft > 0) {
-            timerEl.textContent = timeLeft + 's';
+            timerEl.textContent = 'Time Left: ' + timeLeft + 's';
             timeLeft--; 
           } else {
           timerEl.textContent = "";
@@ -253,3 +265,6 @@ button4El.addEventListener('click', checkAnswer);
 
 //add event listener for save button, call highscores
 saveBtn.addEventListener('click', saveScore);
+
+goBackBtn.addEventListener("click", goBack);
+clearScoresBtn.addEventListener("click", clearScore);
